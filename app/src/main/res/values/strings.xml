@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Task1</string>
+    <string name="B1">Red</string>
+    <string name="B2">Green</string>
+    <string name="B3">Blue</string>
+    <string name="text1">R Value</string>
+    <string name="text2">G Value</string>
+    <string name="text3">B Value</string>
+    <string name="reset">Reset</string>
+</resources>
