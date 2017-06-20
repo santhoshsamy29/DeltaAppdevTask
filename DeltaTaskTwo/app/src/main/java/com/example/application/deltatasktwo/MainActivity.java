@@ -261,9 +261,7 @@ public class MainActivity extends AppCompatActivity {
                     File cropimage_name = new File(cropimg_path,imgname);
                     //Bundle extras = data.getExtras();
                     crop_uri=getContent(this,cropimage_name);
-                    Log.d("SAN","Before");
                     img_list.get(crop_position).image = crop_uri;
-                    Log.d("SAN","After");
                     img_adapter.notifyDataSetChanged();
 
                     myDataBase.updateData(img_list.get(crop_position),crop_uri);
