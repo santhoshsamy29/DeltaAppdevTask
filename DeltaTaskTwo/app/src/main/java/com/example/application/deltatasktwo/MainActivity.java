@@ -16,7 +16,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-
+import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -29,6 +29,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -46,20 +47,19 @@ import java.util.Date;
 public class MainActivity extends AppCompatActivity {
 
     MyDataBase myDataBase = new MyDataBase(this);
-
     CoordinatorLayout coordinatorLayout;
     RecyclerView recyclerView;
     ImageAdapter img_adapter;
     FloatingActionButton fab;
-
-    Uri crop_img_uri;
     String timeStamp;
     String imgname;
+    Uri crop_img_uri;
+
     private static final int REQUEST_CAMERA = 1;
     private static final int REQUEST_GALLERY = 2;
     private static final int REQUEST_CROP = 3;
     public int POSITION = 0;
-    public int crop_position;
+    public int crop_position=0;
     public int snack_flag;
 
     ArrayList<CardView> img_list = new ArrayList<>();
@@ -79,9 +79,10 @@ public class MainActivity extends AppCompatActivity {
             message.show();
         }
 
-
-
+        recyclerView = (RecyclerView) findViewById(R.id.rv_view);
         fab = (FloatingActionButton)findViewById(R.id.fab);
+
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,18 +90,19 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        recyclerView = (RecyclerView) findViewById(R.id.rv_view);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
         recyclerView.setLayoutManager(layoutManager);
 
         img_list = myDataBase.getData();
+
         img_adapter = new ImageAdapter(this,img_list);
         recyclerView.setAdapter(img_adapter);
+
         img_adapter.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(CardView card) {
                 try {
-                    crop_position = card.position;
+                    crop_position = img_list.indexOf(card);
                     crop_img_uri = card.image;
                     timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                     imgname = "IMG_" + timeStamp + ".jpg";
@@ -123,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
                     cropIntent.putExtra(MediaStore.EXTRA_OUTPUT, img_uri);
                     startActivityForResult(cropIntent, REQUEST_CROP);
                 }catch (ActivityNotFoundException e){
-                    Toast.makeText(MainActivity.this,"No activity found for crop activity",Toast.LENGTH_SHORT);
+
                 }
             }
         });
@@ -169,8 +171,10 @@ public class MainActivity extends AppCompatActivity {
                 temp_perm.add(permission[i]);
             }
         }
+
         String[] perm = new String[temp_perm.size()];
         perm = temp_perm.toArray(perm);
+
         if(perm.length>0){
             ActivityCompat.requestPermissions(this,perm,perm_id);
             return false;
@@ -179,6 +183,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -200,27 +205,27 @@ public class MainActivity extends AppCompatActivity {
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
+
     }
 
     public void cameraIntent(){
         timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         imgname = "IMG_" + timeStamp + ".jpg";
-
         Intent camIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if(camIntent.resolveActivity(getPackageManager())!= null){
             File img_path = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),"/DeltaTaskTwo");
             if(!img_path.exists()){
                 if(img_path.mkdirs()){
-                    Log.d("CAMERA_INTENT","Failed to create Directory");
+                    Log.d("CAE","Failed to create Directory");
                 }
             }
             File image_name = new File(img_path,imgname);
             Uri img_uri = Uri.fromFile(image_name);
+            //Log.e("SAN","Camera Intent " + img_uri);
             camIntent.putExtra(MediaStore.EXTRA_OUTPUT,img_uri);
             startActivityForResult(camIntent,REQUEST_CAMERA);
         }
     }
-
     public void galleryIntent(){
         Intent galIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         if(galIntent.resolveActivity(getPackageManager())!= null){
@@ -236,28 +241,39 @@ public class MainActivity extends AppCompatActivity {
                 case REQUEST_CAMERA:
                     File img_path = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),"/DeltaTaskTwo");
                     File image_name = new File(img_path,imgname);
+
                     Bitmap bm = decodebitmap(image_name,700,1000);
+
                     fOut(bm,image_name);
+
                     Uri imageUri = getContent(this,image_name);
                     writecaption(imageUri);
+
                     break;
                 case REQUEST_GALLERY:
                     Uri imguri = data.getData();
                     writecaption(imguri);
+
                     break;
                 case REQUEST_CROP:
                     Uri crop_uri;
                     File cropimg_path = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),"/DeltaTaskTwo");
                     File cropimage_name = new File(cropimg_path,imgname);
+                    //Bundle extras = data.getExtras();
                     crop_uri=getContent(this,cropimage_name);
+                    Log.d("SAN","Before");
                     img_list.get(crop_position).image = crop_uri;
+                    Log.d("SAN","After");
                     img_adapter.notifyDataSetChanged();
-                    myDataBase.updateData(img_list.get(crop_position));
+
+                    myDataBase.updateData(img_list.get(crop_position),crop_uri);
             }
         }
     }
 
+
     private Uri getContent(Context context, File image) {
+
         String imagePath = image.getAbsolutePath();
         Cursor cursor = context.getContentResolver().query(
                 MediaStore.Files.getContentUri("external"),
@@ -280,6 +296,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
     public void writecaption(final Uri imguri){
         final Uri image_uri = imguri;
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -293,11 +310,15 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 String caption = dialog_et.getText().toString();
                 if(!TextUtils.isEmpty(caption)){
+                    Log.d("SAN","BEFORE");
                     CardView new_card = new CardView(POSITION,caption,image_uri);
                     img_list.add(new_card);
                     myDataBase.createData(new_card);
+                    Log.e("SAN", "Added " + new_card.caption + " with id " + new_card.position + " at " + new_card.image + POSITION);
+                    Log.d("SAN","AFTER");
                     img_adapter.notifyDataSetChanged();
                     POSITION++;
+
                 }
                 else{
                     Toast.makeText(MainActivity.this,"Enter a caption",Toast.LENGTH_SHORT).show();
@@ -308,8 +329,7 @@ public class MainActivity extends AppCompatActivity {
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Toast.makeText(MainActivity.this,"Enter a caption",Toast.LENGTH_SHORT).show();
-                writecaption(image_uri);
+                    writecaption(image_uri);
             }
         });
         AlertDialog cap_dialog = builder.create();
@@ -349,7 +369,9 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
                 sbar.show();
+
             }
+
         };
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(ith);
         itemTouchHelper.attachToRecyclerView(recyclerView);
@@ -375,6 +397,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         options.inSampleSize = samplesize;
+
         options.inJustDecodeBounds = false;
         return BitmapFactory.decodeFile(image.getAbsolutePath(),options);
     }
@@ -389,6 +412,7 @@ public class MainActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -404,6 +428,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         SharedPreferences pref = getSharedPreferences("POS", Context.MODE_PRIVATE);
+        Log.e("SAN","Position =" + POSITION);
         SharedPreferences.Editor editor = pref.edit();
         editor.putInt("Position",POSITION);
         editor.apply();

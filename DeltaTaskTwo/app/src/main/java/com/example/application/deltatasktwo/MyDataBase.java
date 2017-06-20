@@ -77,11 +77,11 @@ public class MyDataBase {
         return temp_array;
     }
 
-    public void updateData(CardView card){
+    public void updateData(CardView card,Uri img_uri){
         mdbhelper = new dbHelper(context);
         SQLiteDatabase database = mdbhelper.getWritableDatabase();
         ContentValues cv_update = new ContentValues();
-        cv_update.put(KEY_IMAGE,card.image.toString());
+        cv_update.put(KEY_IMAGE,img_uri.toString());
         cv_update.put(KEY_CAPTION,card.caption);
         database.update(TABLE_NAME,cv_update,KEY_C_ID + "=?",new String[]{String.valueOf(card.position)});
     }
