@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.application.unit.HomeActivity">
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/screenButton"
+        android:layout_centerInParent="true"
+        android:text="@string/next_screen" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/graphButton"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/screenButton"
+        android:text="@string/graph_screen"
+        android:layout_marginTop="20dp"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/search_activity_button"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/graphButton"
+        android:text="@string/search_activity"
+        android:layout_marginTop="20dp"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/conservationButton"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/screenButton"
+        android:text="@string/conservation"
+        android:layout_marginBottom="20dp"/>
+
+</RelativeLayout>

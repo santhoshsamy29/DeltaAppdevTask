@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="15dp"
+    android:background="@drawable/predictions_border"
+    android:id="@+id/predictions_tv"
+    android:text="Danaerys"
+    android:textSize="16sp"
+    android:textColor="#000000"
+    android:layout_margin="5dp"/>

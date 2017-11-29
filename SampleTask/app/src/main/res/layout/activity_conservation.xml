@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ECEFF1"
+    tools:context="com.example.application.unit.ConservationActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Spinner
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinner_year1"
+            android:prompt="@string/spinner_year"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp"/>
+
+        <Spinner
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinner_month1"
+            android:prompt="@string/spinner_month"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_alignParentRight="true" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_below="@+id/spinner_year1"
+            android:background="#757575"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/fuel_tv"
+            android:text="@string/fuel"
+            android:textSize="23sp"
+            android:textColor="#616161"
+            android:textStyle="bold"
+            android:layout_below="@+id/spinner_year1"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="15dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/litres_name"
+            android:text="Litres"
+            android:textColor="#616161"
+            android:textSize="11sp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/spinner_year1"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="20dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:id="@+id/fuel_view"
+            android:layout_marginRight="10dp"
+            android:layout_toRightOf="@+id/fuel_tv"
+            android:layout_below="@id/litres_name"
+            android:background="#616161"/>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:id="@+id/fuel_pic1"
+            android:layout_below="@+id/fuel_tv"
+            android:layout_marginLeft="50dp"
+            android:background="@drawable/fuel"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/fuel_petrol"
+            android:text="Petrol : "
+            android:textSize="17sp"
+            android:textColor="#000000"
+            android:layout_below="@id/fuel_tv"
+            android:layout_toRightOf="@+id/fuel_pic1"
+            android:layout_marginLeft="10dp"
+            android:paddingBottom="5dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginRight="15dp"
+            android:layout_alignLeft="@+id/fuel_petrol"
+            android:layout_below="@+id/fuel_petrol"
+            android:background="#757575"/>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:id="@+id/fuel_pic2"
+            android:layout_below="@+id/fuel_petrol"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/fuel"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/fuel_diesel"
+            android:text="Diesel : "
+            android:textSize="17sp"
+            android:textColor="#000000"
+            android:layout_below="@id/fuel_petrol"
+            android:layout_toRightOf="@+id/fuel_pic2"
+            android:layout_marginLeft="10dp"
+            android:paddingTop="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/time_tv"
+            android:text="@string/time"
+            android:textSize="23sp"
+            android:textColor="#616161"
+            android:textStyle="bold"
+            android:layout_below="@+id/fuel_diesel"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="13dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="17dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/hours_name"
+            android:text="Hours"
+            android:textColor="#616161"
+            android:textSize="11sp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/fuel_diesel"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="13dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:id="@+id/time_view"
+            android:layout_marginRight="10dp"
+            android:layout_toRightOf="@+id/time_tv"
+            android:layout_below="@id/hours_name"
+            android:background="#616161"/>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:id="@+id/time_pic1"
+            android:layout_below="@+id/time_tv"
+            android:layout_marginLeft="50dp"
+            android:background="@drawable/time"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/time_car"
+            android:text="Car : "
+            android:textSize="17sp"
+            android:textColor="#000000"
+            android:layout_below="@id/time_tv"
+            android:layout_toRightOf="@+id/time_pic1"
+            android:layout_marginLeft="10dp"
+            android:paddingBottom="10dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignLeft="@+id/time_car"
+            android:layout_marginRight="15dp"
+            android:layout_below="@+id/time_car"
+            android:background="#757575"/>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:id="@+id/time_pic2"
+            android:layout_below="@+id/time_car"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/time"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/time_walk"
+            android:text="Walk : "
+            android:textSize="17sp"
+            android:textColor="#000000"
+            android:layout_below="@id/time_car"
+            android:layout_toRightOf="@id/time_pic2"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="15dp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/money_tv1"
+            android:text="Money"
+            android:textSize="23sp"
+            android:textColor="#616161"
+            android:textStyle="bold"
+            android:layout_below="@id/time_walk"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="13dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="8dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/inr_name"
+            android:text="INR"
+            android:textColor="#616161"
+            android:textSize="11sp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/time_walk"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="14dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:id="@+id/money_view"
+            android:layout_marginRight="10dp"
+            android:layout_toRightOf="@+id/money_tv1"
+            android:layout_below="@id/inr_name"
+            android:background="#616161"/>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:id="@+id/money_pic"
+            android:layout_below="@+id/money_tv1"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/money"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/money_tv2"
+            android:text="Money : "
+            android:textSize="17sp"
+            android:textColor="#000000"
+            android:layout_below="@id/money_tv1"
+            android:layout_toRightOf="@id/money_pic"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/energy_tv1"
+            android:text="Energy"
+            android:textSize="23sp"
+            android:textStyle="bold"
+            android:textColor="#616161"
+            android:layout_below="@+id/money_tv2"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="13dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/calories_name"
+            android:text="Calories"
+            android:textColor="#616161"
+            android:textSize="11sp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/money_tv2"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="14dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:id="@+id/energy_view"
+            android:layout_marginRight="10dp"
+            android:layout_toRightOf="@+id/energy_tv1"
+            android:layout_below="@id/calories_name"
+            android:background="#616161"/>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:id="@+id/energy_pic"
+            android:layout_below="@+id/energy_tv1"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/energy"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/energy_tv"
+            android:text="Energy : "
+            android:textSize="17sp"
+            android:textColor="#000000"
+            android:layout_below="@id/energy_tv1"
+            android:layout_toRightOf="@id/money_pic"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp" />
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:id="@+id/info_progress"
+            android:visibility="invisible"/>
+
+    </RelativeLayout>
+
+</ScrollView>

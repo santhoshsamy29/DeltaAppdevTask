@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.application.unit.BarActivity">
+
+    <Spinner
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner_year"
+        android:prompt="@string/spinner_year"
+        android:layout_marginLeft="10dp"/>
+
+    <Spinner
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/spinner_month"
+        android:prompt="@string/spinner_month"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/spinner_year" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/total_tv"
+        android:text="Total : 00"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:layout_toLeftOf="@+id/money_tv"
+        android:layout_alignBaseline="@+id/spinner_month"
+        android:layout_marginRight="10dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/money_tv"
+        android:text="Money : 00"
+        android:textColor="#000000"
+        android:textSize="18sp"
+        android:layout_alignBaseline="@id/spinner_month"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"/>
+
+    <com.github.mikephil.charting.charts.BarChart
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/bar_graph"
+        android:layout_below="@+id/spinner_year"/>
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/graph_progress"
+        android:visibility="invisible"
+        android:layout_centerInParent="true"/>
+
+</RelativeLayout>
