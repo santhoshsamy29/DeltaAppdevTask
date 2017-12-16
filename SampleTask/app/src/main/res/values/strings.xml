@@ -13,4 +13,7 @@
     <string name="search_for_the_product">Search for the product</string>
     <string name="speech_prompt">Say something</string>
     <string name="speech_not_supported">Sorry! Your device doesn\'t support speech input</string>
+    <string name="delivery_address">Delivery Address</string>
+    <string name="sign_in">SIGN IN</string>
+    <string name="selfie">Selfie</string>
 </resources>

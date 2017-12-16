@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.example.application.unit.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -73,6 +74,7 @@ public class TaskActivity extends AppCompatActivity implements SwipeRefreshLayou
         });
     }
 
+    //Function for onclicks of different views
     private void itemclicks(View view, int position) {
         switch (view.getId()){
             case R.id.call :
@@ -90,7 +92,12 @@ public class TaskActivity extends AppCompatActivity implements SwipeRefreshLayou
                     Toast.makeText(getApplicationContext(),"No maps activity found",Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }*/
-                startActivity(new Intent(TaskActivity.this,MapsActivity.class));
+                Intent mapsIntent = new Intent(TaskActivity.this,MapsActivity.class);
+                Bundle b = new Bundle();
+                b.putDouble("latitude", 30.730267);
+                b.putDouble("longitude",76.773582);
+                mapsIntent.putExtras(b);
+                startActivity(mapsIntent);
                 /*manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
                 if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
                     askPerm();
@@ -126,6 +133,7 @@ public class TaskActivity extends AppCompatActivity implements SwipeRefreshLayou
         builder.show();
     }*/
 
+    //Function to open dialog onclick of clickhere
     void openDialog(){
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Hello");
@@ -147,6 +155,7 @@ public class TaskActivity extends AppCompatActivity implements SwipeRefreshLayou
         }
     }
 
+    //Function to fetch data from database
     private void fetchData() {
         names.clear();
         rootRef = FirebaseDatabase.getInstance().getReference();

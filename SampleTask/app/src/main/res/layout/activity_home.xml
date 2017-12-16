@@ -16,6 +16,13 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/store_activity_button"
+
+        android:text="Store Activity Button" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:id="@+id/graphButton"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/screenButton"
@@ -34,10 +41,28 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/congrats_activity_button"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/search_activity_button"
+        android:text="Congrats Activity"
+        android:layout_marginTop="20dp"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:id="@+id/conservationButton"
         android:layout_centerHorizontal="true"
         android:layout_above="@id/screenButton"
         android:text="@string/conservation"
+        android:layout_marginBottom="20dp"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/trialButton"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/conservationButton"
+        android:text="Trial Screen"
         android:layout_marginBottom="20dp"/>
 
 </RelativeLayout>

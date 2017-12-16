@@ -13,7 +13,7 @@ import android.widget.Button;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
-class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder>{
+public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder>{
 
     ClickListener clickListener;
     Context context;
@@ -103,7 +103,7 @@ class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder>{
         }
     }
 
-    interface ClickListener{
+    public interface ClickListener{
         public void itemClicked(View view,int position);
     }
 }

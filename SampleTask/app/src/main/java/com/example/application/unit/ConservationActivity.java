@@ -81,6 +81,7 @@ public class ConservationActivity extends AppCompatActivity implements AdapterVi
         spinner_month.setOnItemSelectedListener(this);
     }
 
+    //Fetch data to display from database
     private void fetchResults() {
         yearRef = dataRef.child(year);
         monthRef = yearRef.child(month);
@@ -102,6 +103,7 @@ public class ConservationActivity extends AppCompatActivity implements AdapterVi
         });
     }
 
+    //Display the data fetched from database
     private void showResults() {
         int petrol_consumed,diesel_consumed;
         petrol_consumed = distance/MILEAGE_PETROL;
@@ -114,6 +116,7 @@ public class ConservationActivity extends AppCompatActivity implements AdapterVi
         energyTv.setText("Energy : " + String.valueOf(276 * (distance/DEFAULT_WALK_SPEED)));
     }
 
+    //Onclick for spinners
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         switch(adapterView.getId()){

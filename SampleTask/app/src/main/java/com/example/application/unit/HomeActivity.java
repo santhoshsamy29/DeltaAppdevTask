@@ -10,10 +10,11 @@ import android.view.View;
 import android.widget.Button;
 
 import com.github.mikephil.charting.data.BarData;
+import com.example.application.unit.R;
 
 public class HomeActivity extends AppCompatActivity {
 
-    Button screenButton, graphButton, conservationButton, searchActivityButton;
+    Button screenButton, graphButton, conservationButton, searchActivityButton,trialActivityButton,congratsActivityButton,storesActivityButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,5 +52,31 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(new Intent(HomeActivity.this,ConservationActivity.class));
             }
         });
+
+        trialActivityButton = findViewById(R.id.trialButton);
+        trialActivityButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(HomeActivity.this,UnitTialActivity.class));
+            }
+        });
+
+        congratsActivityButton = findViewById(R.id.congrats_activity_button);
+        congratsActivityButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(HomeActivity.this,CongratsActivity.class));
+            }
+        });
+
+        storesActivityButton = findViewById(R.id.store_activity_button);
+        storesActivityButton.setVisibility(View.INVISIBLE);
+        storesActivityButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(HomeActivity.this,StoresActivity.class));
+            }
+        });
+
     }
 }

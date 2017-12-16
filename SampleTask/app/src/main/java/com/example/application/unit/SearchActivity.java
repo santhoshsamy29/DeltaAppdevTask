@@ -188,6 +188,7 @@ public class SearchActivity extends AppCompatActivity {
         });
     }
 
+    //Function to open voice recogniser
     private void promptSpeechInput() {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
@@ -204,6 +205,7 @@ public class SearchActivity extends AppCompatActivity {
         }
     }
 
+    //Function to dispay fetched data
     public void displayData(){
         name = searchBar.getText().toString().toLowerCase();
         prodRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -249,6 +251,7 @@ public class SearchActivity extends AppCompatActivity {
         });
     }
 
+    //Helper function to find LCS
     private int largest(ArrayList<Integer> maxLcs, int size) {
 
         int largest = 0;
@@ -261,6 +264,7 @@ public class SearchActivity extends AppCompatActivity {
         return largest;
     }
 
+    //Function to determine LCS
     int lcs( char[] X, char[] Y, int m, int n )
     {
         if (m == 0 || n == 0)
@@ -271,11 +275,13 @@ public class SearchActivity extends AppCompatActivity {
             return max(lcs(X, Y, m, n-1), lcs(X, Y, m-1, n));
     }
 
+    //Function to return max of two numbers
     int max(int a, int b)
     {
         return (a > b)? a : b;
     }
 
+    //Function to show data that is fetched
     private void showData(String name) {
         nameRef = prodRef.child(name);
         nameRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -317,6 +323,7 @@ public class SearchActivity extends AppCompatActivity {
         });
     }
 
+    //Function to make changes based on changes in edittext
     private TextWatcher filterTextWatcher = new TextWatcher() {
 
         @Override
@@ -340,6 +347,7 @@ public class SearchActivity extends AppCompatActivity {
         }
     };
 
+    //Helper funtion for animation
     public void slideToAbove() {
         Animation slide = null;
         slide = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
@@ -381,6 +389,7 @@ public class SearchActivity extends AppCompatActivity {
 
     }
 
+    //Helper funtion for animation
     public void slideToMiddle() {
         Animation slide = null;
         slide = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0.0f,
@@ -402,6 +411,8 @@ public class SearchActivity extends AppCompatActivity {
                 cardView.setVisibility(View.INVISIBLE);
                 searchButton.setVisibility(View.INVISIBLE);
                 separator.setVisibility(View.GONE);
+                didYouMeanLayout.setVisibility(View.INVISIBLE);
+                searchBar.setText("");
             }
 
             @Override
@@ -431,7 +442,7 @@ public class SearchActivity extends AppCompatActivity {
                 p.addRule(RelativeLayout.CENTER_VERTICAL);
                 p.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
                 micButton.setLayoutParams(p);
-                searchBar.setText("");
+
                 RelativeLayout.LayoutParams q = new RelativeLayout.LayoutParams(closeButton.getWidth(),
                         closeButton.getHeight());
                 q.addRule(RelativeLayout.CENTER_VERTICAL);

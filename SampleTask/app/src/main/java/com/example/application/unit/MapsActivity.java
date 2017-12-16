@@ -1,18 +1,14 @@
 package com.example.application.unit;
 
-import android.*;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
@@ -21,19 +17,13 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -41,14 +31,15 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.JointType;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.maps.model.SquareCap;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import org.json.JSONObject;
@@ -62,7 +53,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -75,10 +65,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Boolean isLocationEnabled = false;
     private GoogleMap map;
     private FusedLocationProviderClient mFusedLocationProviderClient;
-    Location currentLocation;
+    Location currentLocation,prevLoc;
     CircleImageView getCurrent;
     CircleImageView back;
-    LatLng origin, dest;
+    LatLng prev,origin, dest;
 
     MarkerOptions originMark, destMark;
     PolylineOptions lineOptions = null;
@@ -89,11 +79,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Boolean firstDial = false;
     LocationManager manager;
     AlertDialog askPermDialog;
+    double destLatitude,destLongitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        Bundle b = getIntent().getExtras();
+        destLatitude = b.getDouble("latitude",0);
+        destLongitude = b.getDouble("longitude",0);
 
         getCurrent = findViewById(R.id.get_current);
         back = findViewById(R.id.back);
@@ -120,7 +115,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         });
 
-        if (isPermissionGiven) {
+        /*if (isPermissionGiven) {
             if (isLocationEnabled) {
                 getDeviceLocation();
             } else {
@@ -128,17 +123,28 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
         } else {
             callPermissionRequest();
-        }
+        }*/
+
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         mHandler = new Handler();
-        findIt.run();
+        if (isPermissionGiven) {
+            if (isLocationEnabled) {
+                findIt.run();
+            } else {
+                enableLocationDialog();
+            }
+        } else {
+            callPermissionRequest();
+        }
+
     }
 
-
+    //To get location after definite interval
     Runnable findIt = new Runnable() {
         @Override
         public void run() {
@@ -155,6 +161,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     };
 
+    //Default function called after maps is ready
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
@@ -174,14 +181,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     PackageManager.PERMISSION_GRANTED) {
                 return;
             }
-            map.setMyLocationEnabled(true);
+            map.setMyLocationEnabled(false);
             map.getUiSettings().setMyLocationButtonEnabled(false);
-            getDeviceLocation();
+            findIt.run();
         }
 
     }
 
-
+    //To get current location of the user and send origin and destination to url
     private void getDeviceLocation(){
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
@@ -193,50 +200,46 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     public void onComplete(@NonNull Task task) {
                         if(task.isSuccessful()){
 
+                            if(firstCam){
+                                prevLoc = currentLocation;
+                                prev = new LatLng(prevLoc.getLatitude(),prevLoc.getLongitude()) ;
+                            }
+
                             currentLocation = (Location)task.getResult();
+
                             origin = new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude()) ;
-                            dest =  new LatLng(30.730267, 76.773582);
+
+                            Log.e("SAN", "" + currentLocation.getLatitude());
+                            Log.e("SAN","" + destLatitude);
+                            dest =  new LatLng(destLatitude, destLongitude);
 
                             LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
                             boundsBuilder.include(origin);
                             boundsBuilder.include(dest);
                             int routePadding = 100;
                             LatLngBounds latLngBounds = boundsBuilder.build();
+                            
+                            setOriginMarker(R.drawable.red);
+                            
+                            setDestMarker(R.drawable.blue);
 
-                            Drawable originDrawable = getResources().getDrawable(R.drawable.red);
-                            BitmapDescriptor originIcon = getMarkerIconFromDrawable(originDrawable);
-
-                            Drawable destDrawable = getResources().getDrawable(R.drawable.blue);
-                            BitmapDescriptor destIcon = getMarkerIconFromDrawable(destDrawable);
-
-
-                            if(oMarker != null){
-                                oMarker.remove();
-                            }
-                            originMark = new MarkerOptions().position(origin)
-                                    .icon(originIcon);
-
-                            destMark = new MarkerOptions().position(dest)
-                                    .icon(destIcon);
-
-                            oMarker = map.addMarker(originMark);
-
-                            dMarker = map.addMarker(destMark);
                             if(!firstCam){
                                 map.moveCamera(CameraUpdateFactory.newLatLngBounds(latLngBounds,routePadding));
                                 firstCam = true;
+
+                                final String url = getDirectionsUrl(origin, dest);
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        DownloadTask downloadTask = new DownloadTask();
+                                        downloadTask.execute(url);
+
+                                    }
+                                },1000);
                             }
 
 
-                            final String url = getDirectionsUrl(origin, dest);
-                            new Handler().postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    DownloadTask downloadTask = new DownloadTask();
-                                    downloadTask.execute(url);
 
-                                }
-                            },1000);
 
                         }
                     }
@@ -249,6 +252,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    //Helper function to get bitmapdescriptor
     private BitmapDescriptor getMarkerIconFromDrawable(Drawable drawable) {
         Canvas canvas = new Canvas();
         Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
@@ -258,6 +262,81 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
+    //Function to set destinationmarker
+    private void setDestMarker(int res) {
+
+        Drawable destDrawable = getResources().getDrawable(res);
+        BitmapDescriptor destIcon = getMarkerIconFromDrawable(destDrawable);
+
+        destMark = new MarkerOptions().position(dest)
+                .flat(true)
+                .icon(destIcon);
+
+        if(dMarker != null){
+            dMarker.remove();
+        }
+        dMarker = map.addMarker(destMark);
+    }
+
+    //Function to set Originmarker
+    private void setOriginMarker(int res) {
+
+        Drawable originDrawable = getResources().getDrawable(res);
+        BitmapDescriptor originIcon = getMarkerIconFromDrawable(originDrawable);
+
+        originMark = new MarkerOptions().position(origin)
+                .flat(true)
+                .icon(originIcon);
+
+        if(oMarker != null){
+            oMarker.remove();
+        }
+
+
+        oMarker = map.addMarker(originMark);
+        oMarker.setAnchor(0,0.5f);
+        if(firstCam){
+            oMarker.setRotation(getBearing(prev,origin));
+        }
+
+    }
+
+    private float getBearing(LatLng origin, LatLng dest) {
+       /* double lat = Math.abs(origin.latitude - dest.latitude);
+        double lng = Math.abs(origin.longitude - dest.longitude);
+
+        if(origin.latitude < dest.latitude && origin.longitude < dest.longitude){
+            return ((float) Math.toDegrees(Math.atan(lng/lat)));
+        } else if(origin.latitude >= dest.latitude && origin.longitude < dest.longitude){
+            return ((float) (90-Math.toDegrees(Math.atan(lng/lat))+90));
+        } else if(origin.latitude >= dest.latitude && origin.longitude >= dest.longitude){
+            return ((float) (Math.toDegrees(Math.atan(lng/lat))+180));
+        }else if(origin.latitude < dest.latitude && origin.longitude >= dest.longitude){
+            return ((float) (90-Math.toDegrees(Math.atan(lng/lat))+270));
+        }
+        return -1;*/
+
+        double PI = 3.14159;
+        double lat1 = origin.latitude * PI / 180;
+        double long1 = origin.longitude * PI / 180;
+        double lat2 = dest.latitude * PI / 180;
+        double long2 = dest.longitude * PI / 180;
+
+        double dLon = (long2 - long1);
+
+        double y = Math.sin(dLon) * Math.cos(lat2);
+        double x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1)
+                * Math.cos(lat2) * Math.cos(dLon);
+
+        double brng = Math.atan2(y, x);
+
+        brng = Math.toDegrees(brng);
+        brng = (brng + 360) % 360;
+
+        return (float) brng;
+    }
+
+    //Helper function to check for permissions
     public boolean hasPermission() {
         if (ActivityCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -269,12 +348,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    //Helper function to check if location enabled
     private boolean checkLocationEnabled() {
         LocationManager manager = (LocationManager) getSystemService(LOCATION_SERVICE);
         return manager.isProviderEnabled(LocationManager.GPS_PROVIDER)
                 || manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 
+    //Function to open dialog for location permission
     private void enableLocationDialog() {
         if(!firstDial){
             AlertDialog.Builder builder = new AlertDialog.Builder(MapsActivity.this);
@@ -321,12 +402,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         switch (requestCode) {
             case LOCATION_ENABLE_REQUEST_CODE:
                 if (checkLocationEnabled()) {
-                    new Handler().postDelayed(new Runnable() {
+                    /*new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             isLocationEnabled = true;
                         }
-                    },1000);
+                    },1000);*/
+                    isLocationEnabled=true;
 
                 } else {
                     isLocationEnabled = false;
@@ -334,9 +416,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 if (isPermissionGiven && isLocationEnabled) {
                     if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
                             != PackageManager.PERMISSION_GRANTED) {
+                        return;
                     }
                     map.setMyLocationEnabled(true);
                     map.getUiSettings().setMyLocationButtonEnabled(false);
+                    findIt.run();
                 }
         }
     }
@@ -359,7 +443,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                                     android.Manifest.permission.ACCESS_FINE_LOCATION)
                                     != PackageManager.PERMISSION_GRANTED) {
                             }
-                            map.setMyLocationEnabled(true);
+                            map.setMyLocationEnabled(false);
                             map.getUiSettings().setMyLocationButtonEnabled(false);
                         }
                     } else {
@@ -382,8 +466,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mHandler.removeCallbacks(findIt);
     }
 
-
-
+    //Class to download data from the url in asynctask
     private class DownloadTask extends AsyncTask<String, Void, String> {
 
         @Override
@@ -405,7 +488,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
-
+    //Class used to draw the route using polyline
     private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String,String>>>> {
 
         @Override
@@ -425,6 +508,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         @Override
         protected void onPostExecute(List<List<HashMap<String,String>>> result) {
             ArrayList points = null;
+            PolylineOptions polylineOptions = new PolylineOptions();
 
             if(polyline != null){
                 polyline.remove();
@@ -442,16 +526,35 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     points.add(position);
                 }
                 lineOptions.addAll(points);
-                lineOptions.width(10);
-                lineOptions.color(Color.BLACK);
+                lineOptions.width(15);
+                setLineColor("#00b3fd");
+                polylineOptions.addAll(points);
+                polylineOptions.width(20);
+                polylineOptions.color(Color.parseColor("#01579B"));
+
+
                 lineOptions.geodesic(true);
+                lineOptions.startCap(new SquareCap());
+                lineOptions.endCap(new SquareCap());
+                lineOptions.jointType(JointType.ROUND);
             }
             if(lineOptions != null){
+                Polyline polyline1 = map.addPolyline(polylineOptions);
                 polyline =  map.addPolyline(lineOptions);
+
             }
         }
     }
 
+    private void setLineColor(String colorString) {
+        if(lineOptions != null){
+            lineOptions.color(Color.parseColor(colorString));
+        }
+
+    }
+
+
+    //Helper function to get the url
     private String getDirectionsUrl(LatLng origin, LatLng dest) {
         String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
         String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
@@ -463,6 +566,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return url;
     }
 
+    //Helper function to retrieve data from the url
     private String downloadUrl(String strUrl) throws IOException {
         String data = "";
         InputStream iStream = null;

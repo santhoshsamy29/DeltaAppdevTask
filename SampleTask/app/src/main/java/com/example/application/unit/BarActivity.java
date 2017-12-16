@@ -81,6 +81,7 @@ public class BarActivity extends AppCompatActivity implements AdapterView.OnItem
         spinner_month.setOnItemSelectedListener(this);
     }
 
+    //Fetching the graph data from database
     private void fetchGraph() {
         tempOrder = new ArrayList<>();
 
@@ -108,6 +109,7 @@ public class BarActivity extends AppCompatActivity implements AdapterView.OnItem
         });
     }
 
+    //Displaying the fetched data to the screen
     private void displayGraph() {
 
         int total =0 ;
@@ -134,6 +136,7 @@ public class BarActivity extends AppCompatActivity implements AdapterView.OnItem
         moneyTv.setText("Money : " + String.valueOf(total * 10));
     }
 
+    //Onclick for spinners
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
        switch(adapterView.getId()){

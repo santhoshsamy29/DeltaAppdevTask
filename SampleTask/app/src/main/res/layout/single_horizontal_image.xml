@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="#E0E0E0"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/image_border">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="1dp"
+            android:layout_centerInParent="true"
+            android:id="@+id/horizontal_images"
+            android:scaleType="fitXY"/>
+
+        <ImageButton
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginRight="1dp"
+            android:id="@+id/image_close_button"
+            android:background="@drawable/ic_close"
+            android:layout_alignParentRight="true"/>
+
+        <ImageButton
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginLeft="1dp"
+            android:id="@+id/image_heart_button"
+            android:background="@drawable/like"/>
+
+    </RelativeLayout>
+
+
+
+</RelativeLayout>
